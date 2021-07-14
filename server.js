@@ -56,15 +56,17 @@ function seedKittyCollection() {
 
 
 //routs
+
 //http://localhost:3001/
 server.get('/', homePageHandler);
-
 //http://localhost:3006/book?ownerName=emkhareez19@gmail.com
 server.get('/book', handelbook)
 //localhoust:3006/books?name=book1&description=about1&status=readed&userEmail=emkhareez19@gmail.com
 server.post('/books', addBookHandelr)
 //localhost:3006/deleteBook/1?email=emkhareez19@gmail.com
 server.delete('/deleteBook/:bookid', deletehandelr)
+//localhost:3006/UpdateBook/1?email=emkhareez19@gmail.com
+server.put('/UpdateBook/:bookid',UpdateHandeling)
 
 
 //homePageHandler
@@ -145,6 +147,63 @@ function deletehandelr(req,res){
     })
 }
 
+//UpdateHandeling
+function UpdateHandeling(req,res){
+    
+    
+    
+    console.log('reqparams',req.params)
+    let {name,description,status,img,email}=req.body
+    let index=Number(req.params.bookid)
+    console.log('bookid',index)
+
+
+
+    UserModel.findOne({email:email},(error,ownerData)=>{
+        if(error) res.send('error in finding the data')
+        else {
+            console.log(ownerData)
+            ownerData.books.splice(index,1,{
+                name:name,
+                description:description,
+                status:status,
+                img:img
+
+
+                
+            })
+            console.log(ownerData)
+            ownerData.save();
+            res.send(ownerData.books)
+            
+        }
+    })
+
+
+// UserModel.find({email:email},(error,dataUpdate)=>{
+//     if(error){res.send(error)}
+//     else{
+//        let UpdateData=dataUpdate[0].books.filter((item,idx)=>{
+//             if (idx==index){
+//             name: name,
+//             description: description,
+//             status: status,
+//             img: img
+
+//            }
+         
+//        })
+//        dataUpdate[0]=UpdateData
+//        dataUpdate.save()
+//        res.send(dataUpdate.books)
+       
+
+        
+       
+//     }
+// }
+// }
+}
 
 
 server.listen(PORT, () => {

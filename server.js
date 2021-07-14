@@ -126,17 +126,30 @@ function addBookHandelr(req, res) {
 function deletehandelr(req,res){
     console.log(req.params)
     console.log(req.query)
+
+    let bookid=Number(req.params.bookid)
+    let email=req.query.Email
+    UserModel.find({email:email},(error,retrieveData)=>{
+
+        if(error){res.send(error,'not delete')}
+        else{
+        let dataAfterDel=retrieveData[0].books.filter((item,idx)=>{
+            return idx !==bookid
+
+        })
+        retrieveData[0].books=dataAfterDel
+        console.log('data after del',retrieveData[0].books)
+        retrieveData[0].save()
+    }
+
+    })
 }
 
 
 
 server.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`)
-    let bookid=req.params.bookid
-    let email=req.query.Email
-    UserModel.find({email:Email},(error,retriveData)=>{
-
-    })
+ 
 })
 
 

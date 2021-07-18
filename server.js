@@ -9,7 +9,7 @@ server.use(cors());
 server.use(express.json())
 
 const PORT = process.env.PORT;
-mongoose.connect('mongodb://localhost:27017/bookdb', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`${process.env.MONGOURL}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 
@@ -82,7 +82,7 @@ function handelbook(req, res) {
     // let {ownerName} = req.query
     UserModel.find({ email: ownerName }, function (error, ownerData) {
         if (error) {
-            res.send('did not work')
+            res.send(error,'did not work')
         } else {
             res.send(ownerData[0].books)
         }
@@ -142,6 +142,7 @@ function deletehandelr(req,res){
         retrieveData[0].books=dataAfterDel
         console.log('data after del',retrieveData[0].books)
         retrieveData[0].save()
+        res.send(retrieveData[0].books)
     }
 
     })
